@@ -26,6 +26,21 @@ func (receiver *CertificateWrapper) CommonName() string {
 	return receiver.certificate.Subject.CommonName
 }
 
+// PublicKeyPEMString 获取证书的 PublicKey，格式为 PEM
+func (receiver *CertificateWrapper) PublicKeyPEMString() (string, error) {
+	// 提取公钥
+	publicKeyDer, err := x509.MarshalPKIXPublicKey(receiver.certificate.PublicKey)
+	if err != nil {
+		return "", err
+	}
+	publicKeyBlock := pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyDer,
+	}
+	publicKeyPEMStr := string(pem.EncodeToMemory(&publicKeyBlock))
+	return publicKeyPEMStr, nil
+}
+
 func newCertificateWrapperFromDERData(derData []byte) (*CertificateWrapper, error) {
 	cert, err := x509.ParseCertificate(derData)
 	if err != nil {
