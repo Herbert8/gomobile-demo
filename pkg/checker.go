@@ -11,16 +11,34 @@ import (
 	"errors"
 )
 
+// CertificateWrapper 提供一个证书类的包装，用于证书处理。
 type CertificateWrapper struct {
 	certificate *x509.Certificate
 }
 
+// CheckSignatureFrom 判断当前证书是否继承自另一个证书
 func (receiver *CertificateWrapper) CheckSignatureFrom(parentCertWrapperObj *CertificateWrapper) error {
 	return receiver.certificate.CheckSignatureFrom(parentCertWrapperObj.certificate)
 }
 
+// CommonName 获取证书的 CommonName
 func (receiver *CertificateWrapper) CommonName() string {
 	return receiver.certificate.Subject.CommonName
+}
+
+// PublicKeyPEMString 获取证书的 PublicKey，格式为 PEM
+func (receiver *CertificateWrapper) PublicKeyPEMString() (string, error) {
+	// 提取公钥
+	publicKeyDer, err := x509.MarshalPKIXPublicKey(receiver.certificate.PublicKey)
+	if err != nil {
+		return "", err
+	}
+	publicKeyBlock := pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyDer,
+	}
+	publicKeyPEMStr := string(pem.EncodeToMemory(&publicKeyBlock))
+	return publicKeyPEMStr, nil
 }
 
 func newCertificateWrapperFromDERData(derData []byte) (*CertificateWrapper, error) {
@@ -34,6 +52,7 @@ func newCertificateWrapperFromDERData(derData []byte) (*CertificateWrapper, erro
 	}, nil
 }
 
+// NewCertificateWrapperFromPEMData 通过 PEM 格式的数据创建证书
 func NewCertificateWrapperFromPEMData(pemData []byte) (*CertificateWrapper, error) {
 
 	block, _ := pem.Decode(pemData)
@@ -45,14 +64,17 @@ func NewCertificateWrapperFromPEMData(pemData []byte) (*CertificateWrapper, erro
 	return newCertificateWrapperFromDERData(block.Bytes)
 }
 
+// NewCertificateWrapperFromPEMString 通过 PEM 格式的字符串创建证书
 func NewCertificateWrapperFromPEMString(pemStr string) (*CertificateWrapper, error) {
 	return NewCertificateWrapperFromPEMData([]byte(pemStr))
 }
 
+// CheckPEMCertSignatureFromParentPEMCertString 通过 PEM 格式字符串判断证书继承关系
 func CheckPEMCertSignatureFromParentPEMCertString(pemCertStr string, parentPemCertStr string) error {
 	return CheckPEMCertSignatureFromParentPEMCertData([]byte(pemCertStr), []byte(parentPemCertStr))
 }
 
+// CheckPEMCertSignatureFromParentPEMCertData 通过 PEM 格式数据判断证书继承关系
 func CheckPEMCertSignatureFromParentPEMCertData(pemCertData []byte, parentPemCertData []byte) error {
 	cert, err := NewCertificateWrapperFromPEMData(pemCertData)
 	if err != nil {
