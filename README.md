@@ -1,6 +1,8 @@
-# 使用 gomobile 编写证书链校验 Lib
+# Go Mobile Utilities
 
 
+
+## 证书链校验及证书公钥提取
 
 ### 方法说明
 
@@ -33,7 +35,7 @@ func CheckPEMCertSignatureFromParentPEMCertData(pemCertData []byte, parentPemCer
 
 
 
-### 构建
+## 构建
 
 ```bash
 # iOS
