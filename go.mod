@@ -1,4 +1,4 @@
-module check_cert
+module common_utils
 
 go 1.18
 

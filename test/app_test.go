@@ -1,7 +1,7 @@
 package test_test
 
 import (
-	cert "check_cert/pkg"
+	"common_utils/pkg/cert"
 	"io/ioutil"
 	"log"
 	"testing"
