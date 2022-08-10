@@ -12,7 +12,7 @@ readonly BASE_DIR=$SCRIPT_DIR
 
 gomobile bind -v -target ios -o "$BASE_DIR/../build/common_utils.xcframework" "$BASE_DIR/../pkg"/*
 
-gomobile bind -v -target android -androidapi 16 -o "$BASE_DIR/../build/common_utils.aar" "$BASE_DIR/../pkg"/*
+#gomobile bind -v -target android -androidapi 16 -o "$BASE_DIR/../build/common_utils.aar" "$BASE_DIR/../pkg"/*
 
 
 

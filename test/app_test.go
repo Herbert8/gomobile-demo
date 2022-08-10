@@ -1,9 +1,11 @@
 package test_test
 
 import (
+	"common_utils/pkg/archive"
 	"common_utils/pkg/cert"
 	"io/ioutil"
 	"log"
+	"strings"
 	"testing"
 )
 
@@ -52,4 +54,25 @@ func TestPublicKey(t *testing.T) {
 	pbk2Str := loadPEMPubKeyStrFromPEMCertStr(CRT2)
 	log.Println(pbk1Str)
 	log.Println(pbk2Str)
+}
+
+func TestStrJoin(t *testing.T) {
+	var strarr []string
+	strarr = append(strarr, "aaa")
+	strarr = append(strarr, "bbb")
+	strarr = append(strarr, "ccc")
+	t.Log(strarr)
+	t.Log(strings.Join(strarr, "\n"))
+}
+
+func Test7ZipFileList(t *testing.T) {
+	filename := "/Volumes/Data/tmp/bydate/2022-08/2022-08-10/testfile/Archive.7z"
+	s, _ := archive.FilesIn7ZipArchive(filename, "")
+	t.Log(s)
+}
+
+func Test7ZipExtract(t *testing.T) {
+	filename := "/Volumes/Data/tmp/bydate/2022-08/2022-08-10/testfile/Archive.7z"
+	rootPath := "/Volumes/Data/tmp/bydate/2022-08/2022-08-11/z"
+	_ = archive.Extract7ZipArchive(filename, "", rootPath)
 }
