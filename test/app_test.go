@@ -3,8 +3,10 @@ package test_test
 import (
 	"common_utils/pkg/archive"
 	"common_utils/pkg/cert"
+	"common_utils/pkg/detector"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"testing"
 )
@@ -75,4 +77,11 @@ func Test7ZipExtract(t *testing.T) {
 	filename := "/Volumes/Data/tmp/bydate/2022-08/2022-08-10/testfile/Archive.7z"
 	rootPath := "/Volumes/Data/tmp/bydate/2022-08/2022-08-11/z"
 	_ = archive.Extract7ZipArchive(filename, "", rootPath)
+}
+
+func TestDetectContentType(t *testing.T) {
+	filename := "/Volumes/Data/tmp/bydate/2022-08/2022-08-10/testfile/Archive.7z"
+	data, _ := os.ReadFile(filename)
+	ct := detector.DetectContentType(data)
+	t.Log(ct)
 }
